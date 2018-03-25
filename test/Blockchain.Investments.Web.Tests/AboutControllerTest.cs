@@ -4,20 +4,20 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
-namespace Blockchain.Investments.Api
+namespace Gen8.Ledger.Api
 {
     public class AboutControllerTest
     {
         private readonly TestServer _server;
         private readonly HttpClient _client;
         string testMessage;
-        public AboutControllerTest() 
+        public AboutControllerTest()
         {
             // Arrange
             _server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>());
             _client = _server.CreateClient();
-            
+
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace Blockchain.Investments.Api
             // Arrange
             testMessage = "TestAPI";
             string uri = string.Format("/api/about/echo?message={0}", testMessage);
-            
+
             // Act
             var response = await _client.GetAsync(uri);
             response.EnsureSuccessStatusCode();

@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>Blockchain.Investments.Web.Tests</AssemblyName>
-    <PackageId>Blockchain.Investments.Web.Tests</PackageId>
+    <AssemblyName>Gen8.Ledger.Web.Tests</AssemblyName>
+    <PackageId>Gen8.Ledger.Web.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/Blockchain.Investments.Web/Blockchain.Investments.Web.csproj" />
+    <ProjectReference Include="../../src/Gen8.Ledger.Web/Gen8.Ledger.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

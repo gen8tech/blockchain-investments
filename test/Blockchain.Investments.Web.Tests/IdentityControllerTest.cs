@@ -1,19 +1,19 @@
 using System;
-using Blockchain.Investments.Api.Controllers;
-using Blockchain.Investments.Api.Options;
-using Blockchain.Investments.Bitcoin.Domain;
+using Gen8.Ledger.Api.Controllers;
+using Gen8.Ledger.Api.Options;
+using Gen8.Ledger.Bitcoin.Domain;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NBitcoin;
 using Xunit;
 
-namespace Blockchain.Investments.Api
+namespace Gen8.Ledger.Api
 {
     public class IdentityControllerTest
     {
         [Fact]
-        public void Login_BitidRequestMessageIsValid_ReturnsTrue() 
+        public void Login_BitidRequestMessageIsValid_ReturnsTrue()
         {
             // Arrange
             Key privateKey = new Key(); //Create private key
@@ -28,7 +28,7 @@ namespace Blockchain.Investments.Api
             string signature = privateKey.SignMessage(bitIdUri);
 
             var request = new BitIdCredentials(pubAddress.ToString(), bitIdUri, signature);
-            
+
             // Act
             BitIdResponse response = request.VerifyMessage();
 

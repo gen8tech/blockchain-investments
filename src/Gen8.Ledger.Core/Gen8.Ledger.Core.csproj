@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>Gen8.Ledger.Core</AssemblyName>
+    <PackageId>Gen8.Ledger.Core</PackageId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CQRSlite" Version="0.11.3" />
+    <PackageReference Include="mongocsharpdriver" Version="2.4.4" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
+  </ItemGroup>
+</Project>
