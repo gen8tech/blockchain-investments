@@ -37,6 +37,9 @@ namespace Gen8.Ledger.Api
                 if (folder == "bin")
                     break;
                 currentPath = Path.Combine(currentPath, folder);
+
+                if (currentPath.Substring(currentPath.Length - 1, 1) == ":")
+                    currentPath += Path.DirectorySeparatorChar;
             }
 
             if (currentPath == "/")
