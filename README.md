@@ -14,10 +14,11 @@ This application includes:
 ![Command and Query Separation](https://martinfowler.com/bliki/images/cqrs/cqrs.png)
 
 ### Domain Driven Design (DDD) Bounded Contexts
-* **Core**: *Optimal Asset Allocation*
-* **Supporting**: *Saving and Investment*
-* **Generic**: *Ledger and Pricing (external)*
-> [Ledger Domain - Entity-Relationship](https://github.com/rafaelturon/blockchain-investments-docs/blob/master/er-ledger.md)
+* **Aggregate Root**: *Account, Book*
+* **Entities**: *Lot, Period, Price, Security*
+* **Value Object**: *JournalEntry, Transaction*
+
+![Entity-Relationship Diagram](https://github.com/rafaelturon/blockchain-investments-docs/raw/master/images/er-ledger-diagram.png)
 
 ### Technical Details
 **Server Side** - ASPNET Core backend with a restful API using Kestrel Web API Controllers:
