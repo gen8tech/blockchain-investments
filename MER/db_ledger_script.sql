@@ -8,33 +8,49 @@ CREATE TABLE public.Book (
 );
 
 
+CREATE SEQUENCE public.pricingtype_id_seq;
+
 CREATE TABLE public.PricingType (
-                Id INTEGER NOT NULL,
+                Id INTEGER NOT NULL DEFAULT nextval('public.pricingtype_id_seq'),
                 Description VARCHAR(50) NOT NULL,
                 CONSTRAINT pricingtype_pk PRIMARY KEY (Id)
 );
 
 
+ALTER SEQUENCE public.pricingtype_id_seq OWNED BY public.PricingType.Id;
+
+CREATE SEQUENCE public.journaltype_id_seq;
+
 CREATE TABLE public.JournalType (
-                Id INTEGER NOT NULL,
+                Id INTEGER NOT NULL DEFAULT nextval('public.journaltype_id_seq'),
                 Description VARCHAR(50) NOT NULL,
                 CONSTRAINT journaltype_pk PRIMARY KEY (Id)
 );
 
 
+ALTER SEQUENCE public.journaltype_id_seq OWNED BY public.JournalType.Id;
+
+CREATE SEQUENCE public.pricingmechanism_id_seq;
+
 CREATE TABLE public.PricingMechanism (
-                Id INTEGER NOT NULL,
+                Id INTEGER NOT NULL DEFAULT nextval('public.pricingmechanism_id_seq'),
                 Description VARCHAR(50) NOT NULL,
                 CONSTRAINT pricingmechanism_pk PRIMARY KEY (Id)
 );
 
 
+ALTER SEQUENCE public.pricingmechanism_id_seq OWNED BY public.PricingMechanism.Id;
+
+CREATE SEQUENCE public.markettype_id_seq;
+
 CREATE TABLE public.MarketType (
-                Id INTEGER NOT NULL,
+                Id INTEGER NOT NULL DEFAULT nextval('public.markettype_id_seq'),
                 Description VARCHAR(50) NOT NULL,
                 CONSTRAINT markettype_pk PRIMARY KEY (Id)
 );
 
+
+ALTER SEQUENCE public.markettype_id_seq OWNED BY public.MarketType.Id;
 
 CREATE SEQUENCE public.security_id_seq;
 
@@ -74,19 +90,27 @@ CREATE TABLE public.Price (
 
 ALTER SEQUENCE public.price_id_seq OWNED BY public.Price.Id;
 
+CREATE SEQUENCE public.counterpartytype_id_seq;
+
 CREATE TABLE public.CounterpartyType (
-                Id INTEGER NOT NULL,
+                Id INTEGER NOT NULL DEFAULT nextval('public.counterpartytype_id_seq'),
                 Description VARCHAR(50) NOT NULL,
                 CONSTRAINT counterpartytype_pk PRIMARY KEY (Id)
 );
 
 
-CREATE TABLE public.AccountTupe (
-                Id INTEGER NOT NULL,
+ALTER SEQUENCE public.counterpartytype_id_seq OWNED BY public.CounterpartyType.Id;
+
+CREATE SEQUENCE public.accounttype_id_seq;
+
+CREATE TABLE public.AccountType (
+                Id INTEGER NOT NULL DEFAULT nextval('public.accounttype_id_seq'),
                 Description VARCHAR(50) NOT NULL,
-                CONSTRAINT accounttupe_pk PRIMARY KEY (Id)
+                CONSTRAINT accounttype_pk PRIMARY KEY (Id)
 );
 
+
+ALTER SEQUENCE public.accounttype_id_seq OWNED BY public.AccountType.Id;
 
 CREATE SEQUENCE public.account_id_seq;
 
@@ -217,9 +241,9 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
-ALTER TABLE public.Account ADD CONSTRAINT accounttupe_account_fk
+ALTER TABLE public.Account ADD CONSTRAINT accounttype_account_fk
 FOREIGN KEY (act_id)
-REFERENCES public.AccountTupe (Id)
+REFERENCES public.AccountType (Id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
