@@ -9,7 +9,7 @@ using System;
 
 namespace Gen8.Ledger.Core.Repositories
 {
-    public class MongoRepository<T> : IRepository<T>
+    public class MongoRepository<T> : INoSqlRepository<T>
         where T : BaseEntity, new()
     {
         private readonly AppConfig _optionsAccessor;

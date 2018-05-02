@@ -11,12 +11,14 @@ namespace Gen8.Ledger.Api.Controllers
     public class PriceController : Controller
     {
         private readonly ILogger<PriceController> _logger;
-        private IRepository<Price> _repo;
+        private readonly INoSqlRepository<Price> _nosqlRepo;
+        private readonly IRelationalRepository<Price> _relationalRepo;
 
-        public PriceController (ILogger<PriceController> logger, IRepository<Price> repo)
+        public PriceController (ILogger<PriceController> logger, INoSqlRepository<Price> nosqlRepo, IRelationalRepository<Price> relationalRepo)
         {
             _logger = logger;
-            _repo = repo;
+            _nosqlRepo = nosqlRepo;
+            _relationalRepo = relationalRepo;
         }
 
         // GET api/values
@@ -24,7 +26,7 @@ namespace Gen8.Ledger.Api.Controllers
         public IEnumerable<Price> Get()
         {
             _logger.LogInformation(LoggingEvents.LIST_ITEMS, "Listing all items");
-            return _repo.FindAll();
+            return _nosqlRepo.FindAll();
         }
 
         // GET api/values/5
@@ -33,7 +35,7 @@ namespace Gen8.Ledger.Api.Controllers
         {
             _logger.LogInformation(LoggingEvents.GET_ITEM, "Getting item {0}", id);
 
-            var price = _repo.FindByObjectId(id);
+            var price = _nosqlRepo.FindByObjectId(id);
             if (price == null)
             {
                 _logger.LogWarning(LoggingEvents.GET_ITEM_NOTFOUND, "GetById({ID}) NOT FOUND", id);
@@ -50,7 +52,7 @@ namespace Gen8.Ledger.Api.Controllers
             {
                 return BadRequest();
             }
-            var newPrice = _repo.Create(price);
+            var newPrice = _nosqlRepo.Create(price);
             _logger.LogInformation(LoggingEvents.INSERT_ITEM, "Item {0} Created", newPrice.UniqueId);
             return new OkObjectResult(price);
         }
@@ -64,14 +66,14 @@ namespace Gen8.Ledger.Api.Controllers
                 return BadRequest();
             }
 
-            var currentPrice = _repo.FindByObjectId(price.UniqueId);
+            var currentPrice = _nosqlRepo.FindByObjectId(price.UniqueId);
             if (currentPrice == null)
             {
                 _logger.LogWarning(LoggingEvents.GET_ITEM_NOTFOUND, "Update({0}) NOT FOUND", price.UniqueId);
                 return NotFound();
             }
 
-            _repo.Update(price.UniqueId, price);
+            _nosqlRepo.Update(price.UniqueId, price);
             _logger.LogInformation(LoggingEvents.UPDATE_ITEM, "Item {0} Updated", price.UniqueId);
             return new OkResult();
         }
@@ -80,13 +82,13 @@ namespace Gen8.Ledger.Api.Controllers
         [HttpDelete("{id:length(24)}")]
         public IActionResult Delete(string id)
         {
-            var price = _repo.FindByObjectId(id);
+            var price = _nosqlRepo.FindByObjectId(id);
             if (price == null)
             {
                 return NotFound();
             }
 
-            _repo.Remove(id);
+            _nosqlRepo.Remove(id);
             _logger.LogInformation(LoggingEvents.DELETE_ITEM, "Item {0} Deleted", id);
             return new OkResult();
         }

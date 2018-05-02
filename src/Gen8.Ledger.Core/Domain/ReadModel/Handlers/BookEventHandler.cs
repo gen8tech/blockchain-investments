@@ -10,14 +10,17 @@ namespace Gen8.Ledger.Core.ReadModel.Handlers
 	public class BookEventHandler : IEventHandler<BookCreated>,
                                     IEventHandler<TransactionCreated>
     {
-        private readonly IRepository<BookDto> _repo;
-        public BookEventHandler(IRepository<BookDto> repo)
+        private readonly INoSqlRepository<BookDto> _nosqlRepo;
+        private readonly IRelationalRepository<BookDto> _relationalRepo;
+
+        public BookEventHandler(INoSqlRepository<BookDto> nosqlRepo, IRelationalRepository<BookDto> relationalRepo)
         {
-            _repo = repo;
+            _nosqlRepo = nosqlRepo;
+            _relationalRepo = relationalRepo;
         }
         public void Handle(TransactionCreated message)
         {
-            BookDto book = _repo.FindByAggregateId(message.Id);
+            BookDto book = _nosqlRepo.FindByAggregateId(message.Id);
             book.Journal.Add(message.JournalEntry);
             foreach (var ledgerAccount in message.LedgerEntry)
             {
@@ -60,13 +63,13 @@ namespace Gen8.Ledger.Core.ReadModel.Handlers
                 book.TrialBalance[ledgerAccount.Key] = trialBalanceList;
             }
 
-            _repo.Update(book.UniqueId, book);
+            _nosqlRepo.Update(book.UniqueId, book);
         }
 
         public void Handle(BookCreated message)
         {
             var transaction = new BookDto(message.Id, message.UserId, message.JournalEntry, message.LedgerEntry);
-            _repo.Create(transaction);
+            _nosqlRepo.Create(transaction);
         }
     }
 }

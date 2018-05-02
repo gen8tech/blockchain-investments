@@ -19,13 +19,15 @@ namespace Gen8.Ledger.Api.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ICommandSender _commandSender;
-        private readonly IRepository<AccountDto> _repo;
+        private readonly INoSqlRepository<AccountDto> _nosqlRepo;
+        private readonly IRelationalRepository<AccountDto> _relationalRepo;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController (ILogger<AccountController> logger, IRepository<AccountDto> repo, ICommandSender commandSender, IMapper mapper)
+        public AccountController (ILogger<AccountController> logger, INoSqlRepository<AccountDto> nosqlRepo, IRelationalRepository<AccountDto> relationalRepo, ICommandSender commandSender, IMapper mapper)
         {
             _logger = logger;
-            _repo = repo;
+            _nosqlRepo = nosqlRepo;
+            _relationalRepo = relationalRepo;
             _commandSender = commandSender;
             _mapper = mapper;
         }
@@ -35,7 +37,7 @@ namespace Gen8.Ledger.Api.Controllers
         public IEnumerable<AccountDto> Get()
         {
             _logger.LogInformation(LoggingEvents.LIST_ITEMS, "Listing all items");
-            return _repo.FindAll();
+            return _nosqlRepo.FindAll();
         }
 
         // GET api/values/5
@@ -44,7 +46,7 @@ namespace Gen8.Ledger.Api.Controllers
         {
             _logger.LogInformation(LoggingEvents.GET_ITEM, "Getting item {0}", id);
 
-            var account = _repo.FindByAggregateId(id);
+            var account = _nosqlRepo.FindByAggregateId(id);
             if (account == null)
             {
                 _logger.LogWarning(LoggingEvents.GET_ITEM_NOTFOUND, "GetById({ID}) NOT FOUND", id);
@@ -57,7 +59,7 @@ namespace Gen8.Ledger.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]AccountRequest request)
         {
-            bool exists = _repo.Exists(request.Id);
+            bool exists = _nosqlRepo.Exists(request.Id);
             if (!exists)
             {
                 return BadRequest();
@@ -73,7 +75,7 @@ namespace Gen8.Ledger.Api.Controllers
         [HttpPut]
         public IActionResult Put([FromBody]AccountRequest request)
         {
-            bool exists = _repo.Exists(request.Id);
+            bool exists = _nosqlRepo.Exists(request.Id);
             if (exists)
             {
                 return BadRequest();
@@ -89,7 +91,7 @@ namespace Gen8.Ledger.Api.Controllers
         [HttpDelete]
         public IActionResult Delete([FromBody]AccountRequest request)
         {
-            bool exists = _repo.Exists(request.Id);
+            bool exists = _nosqlRepo.Exists(request.Id);
             if (!exists)
             {
                 return BadRequest();

@@ -11,12 +11,14 @@ namespace Gen8.Ledger.Api.Controllers
     public class SecurityController : Controller
     {
         private readonly ILogger<SecurityController> _logger;
-        private IRepository<Security> _repo;
+        private readonly INoSqlRepository<Security> _nosqlRepo;
+        private readonly IRelationalRepository<Security> _relationalRepo;
 
-        public SecurityController (ILogger<SecurityController> logger, IRepository<Security> repo)
+        public SecurityController (ILogger<SecurityController> logger, INoSqlRepository<Security> nosqlRepo, IRelationalRepository<Security> relationalRepo)
         {
             _logger = logger;
-            _repo = repo;
+            _nosqlRepo = nosqlRepo;
+            _relationalRepo = relationalRepo;
         }
 
         // GET api/values
@@ -24,7 +26,7 @@ namespace Gen8.Ledger.Api.Controllers
         public IEnumerable<Security> Get()
         {
             _logger.LogInformation(LoggingEvents.LIST_ITEMS, "Listing all items");
-            return _repo.FindAll();
+            return _nosqlRepo.FindAll();
         }
 
         // GET api/values/5
@@ -33,7 +35,7 @@ namespace Gen8.Ledger.Api.Controllers
         {
             _logger.LogInformation(LoggingEvents.GET_ITEM, "Getting item {0}", id);
 
-            var currency = _repo.FindByObjectId(id);
+            var currency = _nosqlRepo.FindByObjectId(id);
             if (currency == null)
             {
                 _logger.LogWarning(LoggingEvents.GET_ITEM_NOTFOUND, "GetById({ID}) NOT FOUND", id);
@@ -50,7 +52,7 @@ namespace Gen8.Ledger.Api.Controllers
             {
                 return BadRequest();
             }
-            var createdCurrency = _repo.Create(security);
+            var createdCurrency = _nosqlRepo.Create(security);
             _logger.LogInformation(LoggingEvents.INSERT_ITEM, "Item {0} Created", createdCurrency.UniqueId);
 
             return CreatedAtRoute("default", new { id = security.UniqueId}, security);
@@ -65,14 +67,14 @@ namespace Gen8.Ledger.Api.Controllers
                 return BadRequest();
             }
 
-            var currentMarket = _repo.FindByObjectId(security.UniqueId);
+            var currentMarket = _nosqlRepo.FindByObjectId(security.UniqueId);
             if (currentMarket == null)
             {
                 _logger.LogWarning(LoggingEvents.GET_ITEM_NOTFOUND, "Update({0}) NOT FOUND", security.UniqueId);
                 return NotFound();
             }
 
-            _repo.Update(security.UniqueId, security);
+            _nosqlRepo.Update(security.UniqueId, security);
             _logger.LogInformation(LoggingEvents.UPDATE_ITEM, "Item {0} Updated", security.UniqueId);
             return Accepted(security);
         }
@@ -81,13 +83,13 @@ namespace Gen8.Ledger.Api.Controllers
         [HttpDelete("{id:length(24)}")]
         public IActionResult Delete(string id)
         {
-            var currency = _repo.FindByObjectId(id);
+            var currency = _nosqlRepo.FindByObjectId(id);
             if (currency == null)
             {
                 return NotFound();
             }
 
-            _repo.Remove(id);
+            _nosqlRepo.Remove(id);
             _logger.LogInformation(LoggingEvents.DELETE_ITEM, "Item {0} Deleted", id);
             return new OkResult();
         }

@@ -25,7 +25,7 @@ namespace Gen8.Ledger.Api.Requests.Accounts
 
     public class AccountRequestValidator : AbstractValidator<AccountRequest>
     {
-        public AccountRequestValidator(IRepository<AccountDto> repo, IOptions<AppConfig> optionsAccessor)
+        public AccountRequestValidator(INoSqlRepository<AccountDto> _nosqlRepo, IRelationalRepository<AccountDto> _relationalRepo, IOptions<AppConfig> optionsAccessor)
         {
             //RuleFor(x => x.Id).Must(x => !repo.Exists(x)).WithMessage("An Account with this ID already exists.");
             //RuleFor(x => x.EmployeeID).Must(x => !employeeRepo.Exists(x)).WithMessage("An Employee with this ID already exists.");

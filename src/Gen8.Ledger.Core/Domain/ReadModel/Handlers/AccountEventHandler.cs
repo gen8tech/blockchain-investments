@@ -9,10 +9,12 @@ namespace Gen8.Ledger.Core.ReadModel.Handlers
                                         IEventHandler<ParentAccountAssigned>,
                                         IEventHandler<AccountDeleted>
     {
-        private readonly IRepository<AccountDto> _repo;
-        public AccountEventHandler (IRepository<AccountDto> repo)
+        private readonly INoSqlRepository<AccountDto> _nosqlRepo;
+        private readonly IRelationalRepository<AccountDto> _relationalRepo;
+        public AccountEventHandler (INoSqlRepository<AccountDto> nosqlRepo, IRelationalRepository<AccountDto> relationalRepo)
         {
-            _repo = repo;
+            _nosqlRepo = nosqlRepo;
+            _relationalRepo = relationalRepo;
 
         }
         public void Handle(AccountCreated message)
@@ -20,21 +22,21 @@ namespace Gen8.Ledger.Core.ReadModel.Handlers
             AccountDto account = new AccountDto(message.Id, message.Title, message.Description,
                                 message.Notes, message.Code, message.Type, message.CounterpartyType,
                                 message.Security, message.ParentAccountId);
-            _repo.Create(account);
+            _nosqlRepo.Create(account);
         }
 
         public void Handle(ParentAccountAssigned message)
         {
-            AccountDto account = _repo.FindByAggregateId(message.Id);
+            AccountDto account = _nosqlRepo.FindByAggregateId(message.Id);
             account.ParentAccountId = message.ParentAccountId;
 
-            _repo.Update(account.UniqueId, account);
+            _nosqlRepo.Update(account.UniqueId, account);
         }
 
         public void Handle(AccountDeleted message)
         {
-            AccountDto account = _repo.FindByAggregateId(message.Id);
-            _repo.Remove(account.UniqueId);
+            AccountDto account = _nosqlRepo.FindByAggregateId(message.Id);
+            _nosqlRepo.Remove(account.UniqueId);
         }
     }
 }

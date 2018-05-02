@@ -9,5 +9,8 @@
     <PackageReference Include="CQRSlite" Version="0.11.3" />
     <PackageReference Include="mongocsharpdriver" Version="2.4.4" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
+    <PackageReference Include="Dapper" Version="1.50.4" />
+    <PackageReference Include="Dapper.Contrib" Version="1.50.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.*" />
   </ItemGroup>
 </Project>

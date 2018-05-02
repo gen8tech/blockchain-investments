@@ -11,12 +11,14 @@ namespace Gen8.Ledger.Api.Controllers
     public class PeriodController : Controller
     {
         private readonly ILogger<PeriodController> _logger;
-        private IRepository<Period> _repo;
+        private readonly INoSqlRepository<Period> _nosqlRepo;
+        private readonly IRelationalRepository<Period> _relationalRepo;
 
-        public PeriodController (ILogger<PeriodController> logger, IRepository<Period> repo)
+        public PeriodController (ILogger<PeriodController> logger, INoSqlRepository<Period> nosqlRepo, IRelationalRepository<Period> relationalRepo)
         {
             _logger = logger;
-            _repo = repo;
+            _nosqlRepo = nosqlRepo;
+            _relationalRepo = relationalRepo;
         }
 
         // GET api/values
@@ -24,7 +26,7 @@ namespace Gen8.Ledger.Api.Controllers
         public IEnumerable<Period> Get()
         {
             _logger.LogInformation(LoggingEvents.LIST_ITEMS, "Listing all items");
-            return _repo.FindAll();
+            return _nosqlRepo.FindAll();
         }
 
         // GET api/values/5
@@ -33,7 +35,7 @@ namespace Gen8.Ledger.Api.Controllers
         {
             _logger.LogInformation(LoggingEvents.GET_ITEM, "Getting item {0}", id);
 
-            var period = _repo.FindByObjectId(id);
+            var period = _nosqlRepo.FindByObjectId(id);
             if (period == null)
             {
                 _logger.LogWarning(LoggingEvents.GET_ITEM_NOTFOUND, "GetById({ID}) NOT FOUND", id);
@@ -50,7 +52,7 @@ namespace Gen8.Ledger.Api.Controllers
             {
                 return BadRequest();
             }
-            var createdPeriod = _repo.Create(period);
+            var createdPeriod = _nosqlRepo.Create(period);
             _logger.LogInformation(LoggingEvents.INSERT_ITEM, "Item {0} Created", createdPeriod.UniqueId);
             return new OkObjectResult(period);
         }
@@ -64,14 +66,14 @@ namespace Gen8.Ledger.Api.Controllers
                 return BadRequest();
             }
 
-            var currentPeriod = _repo.FindByObjectId(period.UniqueId);
+            var currentPeriod = _nosqlRepo.FindByObjectId(period.UniqueId);
             if (currentPeriod == null)
             {
                 _logger.LogWarning(LoggingEvents.GET_ITEM_NOTFOUND, "Update({0}) NOT FOUND", period.UniqueId);
                 return NotFound();
             }
 
-            _repo.Update(period.UniqueId, period);
+            _nosqlRepo.Update(period.UniqueId, period);
             _logger.LogInformation(LoggingEvents.UPDATE_ITEM, "Item {0} Updated", period.UniqueId);
             return new OkResult();
         }
@@ -80,13 +82,13 @@ namespace Gen8.Ledger.Api.Controllers
         [HttpDelete("{id:length(24)}")]
         public IActionResult Delete(string id)
         {
-            var period = _repo.FindByObjectId(id);
+            var period = _nosqlRepo.FindByObjectId(id);
             if (period == null)
             {
                 return NotFound();
             }
 
-            _repo.Remove(id);
+            _nosqlRepo.Remove(id);
             _logger.LogInformation(LoggingEvents.DELETE_ITEM, "Item {0} Deleted", id);
             return new OkResult();
         }

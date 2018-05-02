@@ -33,6 +33,7 @@ using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
+
 namespace Gen8.Ledger.Api
 {
     public class Startup
@@ -64,11 +65,19 @@ namespace Gen8.Ledger.Api
             // Add application services
             services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
             services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(Configuration);
-            services.AddSingleton<IRepository<BookDto>, MongoRepository<BookDto>>();
-            services.AddSingleton<IRepository<AccountDto>, MongoRepository<AccountDto>>();
-            services.AddSingleton<IRepository<Security>, MongoRepository<Security>>();
-            services.AddSingleton<IRepository<Price>, MongoRepository<Price>>();
-            services.AddSingleton<IRepository<Period>, MongoRepository<Period>>();
+            //NoSql Session
+            services.AddSingleton<INoSqlRepository<BookDto>, MongoRepository<BookDto>>();
+            services.AddSingleton<INoSqlRepository<AccountDto>, MongoRepository<AccountDto>>();
+            services.AddSingleton<INoSqlRepository<Security>, MongoRepository<Security>>();
+            services.AddSingleton<INoSqlRepository<Price>, MongoRepository<Price>>();
+            services.AddSingleton<INoSqlRepository<Period>, MongoRepository<Period>>();
+
+            //Relational Session
+            services.AddSingleton<IRelationalRepository<BookDto>, PostgreRepository<BookDto>>();
+            services.AddSingleton<IRelationalRepository<AccountDto>, PostgreRepository<AccountDto>>();
+            services.AddSingleton<IRelationalRepository<Security>, PostgreRepository<Security>>();
+            services.AddSingleton<IRelationalRepository<Price>, PostgreRepository<Price>>();
+            services.AddSingleton<IRelationalRepository<Period>, PostgreRepository<Period>>();
 
             #region CQRS
             services.AddMemoryCache();
