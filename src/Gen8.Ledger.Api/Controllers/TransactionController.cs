@@ -69,7 +69,7 @@ namespace Gen8.Ledger.Api.Controllers
             /*string userId = _httpContextAccessor.HttpContext.User.Claims
                             .Where(c => c.Type == Constants.ClaimType)
                             .Select(c => c.Value).SingleOrDefault(); */
-            string userId = "abc";
+            string userId = "abc123";
 
             BookDto book = _readmodel.Find("UserId", userId);
             if (book == null)
